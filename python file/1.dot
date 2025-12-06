@@ -1,0 +1,86 @@
+digraph AS_RS_Architecture_FujiZhuo {
+    rankdir=LR; // 从左到右布局
+    splines=ortho; // 使用直角连接线
+    node [shape=box, style="rounded,filled", fontname="SimHei", fontsize=10]; // 节点默认样式
+    edge [fontname="SimHei", fontsize=9]; // 边默认样式
+
+    // 定义主集群
+    subgraph cluster_Third_Floor_Logistics {
+        label="三层物流区 (湖州藤卓智能)";
+        bgcolor="lightgrey";
+        fontname="SimHei";
+        fontsize=14;
+
+        // AS/RS 系统集群
+        subgraph cluster_ASRS_System {
+            label="AS/RS 自动化立体仓库系统 (1200 sqm)";
+            bgcolor="lightblue";
+            fontname="SimHei";
+            fontsize=12;
+
+            node [fillcolor="lightcyan"];
+            ASRS_Infeed [label="AS/RS 入库口\n(东侧中部)", shape=cds, fillcolor="palegreen"];
+            ASRS_Outfeed [label="AS/RS 出库口\n(西侧中部)", shape=cds, fillcolor="lightpink"];
+
+            subgraph cluster_A_Zone {
+                label="A类区 (高频)\n靠近出入口 - 4巷道";
+                bgcolor="lightyellow";
+                A_Zone_Storage [label="高周转物料存储\n(配件, 高频成品/半成品)"];
+            }
+            subgraph cluster_B_Zone {
+                label="B类区 (中频)\n中间区域 - 7巷道";
+                bgcolor="lightgoldenrodyellow";
+                B_Zone_Storage [label="中周转物料存储\n(部分阀组, 过滤器, 缸筒)"];
+            }
+            subgraph cluster_C_Zone {
+                label="C类区 (低频)\n远离出入口 - 7巷道";
+                bgcolor="papayawhip";
+                C_Zone_Storage [label="低周转物料存储\n(包材, 部分外协件)"];
+            }
+
+            SR_Machines [label="堆垛机 (15台)", shape=component, fillcolor="azure"];
+
+            // AS/RS 内部流转 (概念性)
+            ASRS_Infeed -> A_Zone_Storage [label="优先入库", style=dashed, color=darkgreen];
+            ASRS_Infeed -> B_Zone_Storage [style=dashed, color=blue];
+            ASRS_Infeed -> C_Zone_Storage [style=dashed, color=grey];
+
+            A_Zone_Storage -> ASRS_Outfeed [label="优先出库", style=dashed, color=darkgreen];
+            B_Zone_Storage -> ASRS_Outfeed [style=dashed, color=blue];
+            C_Zone_Storage -> ASRS_Outfeed [style=dashed, color=grey];
+
+            A_Zone_Storage -> SR_Machines [dir=both, style=dotted, arrowhead=none, color=gray];
+            B_Zone_Storage -> SR_Machines [dir=both, style=dotted, arrowhead=none, color=gray];
+            C_Zone_Storage -> SR_Machines [dir=both, style=dotted, arrowhead=none, color=gray];
+        }
+
+        // 外部设备与接口
+        node [fillcolor="beige"];
+        East_Elevator [label="东门电梯\n(连接1层来料/成品出库)", shape=cylinder];
+        West_Elevator [label="西门电梯\n(连接4层组装/成品出库)", shape=cylinder];
+        AGV_System [label="AGV搬运系统", shape=oval];
+        Conveyor_System [label="主输送系统", shape=parallelogram];
+
+        // 其他区域 (可选)
+        Finished_Goods_Overflow [label="成品库扩展区\n(西南侧)", shape=folder, fillcolor="whitesmoke"];
+        Office_Lab [label="办公/辅助区\n(东侧)", shape=folder, fillcolor="whitesmoke"];
+
+
+        // 主要物流路径
+        East_Elevator -> AGV_System [label="原材料/外协件入库"];
+        AGV_System -> Conveyor_System [label="转运至AS/RS"];
+        Conveyor_System -> ASRS_Infeed [label="入库暂存/扫码"];
+
+        ASRS_Outfeed -> Conveyor_System [label="出库暂存/扫码"];
+        Conveyor_System -> AGV_System [label="转运至电梯"];
+        AGV_System -> West_Elevator [label="半成品至4F组装"];
+        AGV_System -> East_Elevator [label="成品至1F发货 (备选)"];
+
+        // 连接其他区域
+        ASRS_Outfeed -> Finished_Goods_Overflow [label="成品转运", style=dotted];
+        East_Elevator -> Office_Lab [style=invis]; // 仅为布局
+    }
+
+    // 图例 (可选，但Graphviz原生支持不佳，通常外部添加)
+    // caption = "图2.3-1 AS/RS系统与三层物流区架构示意图";
+}

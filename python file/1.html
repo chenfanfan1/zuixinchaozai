@@ -1,0 +1,74 @@
+<canvas id="myChart"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('myChart').getContext('2d');
+  new Chart(ctx, {
+    // 粘贴柱状图的Chart.js代码
+    type: 'bar',
+    data: {
+      labels: ["预制", "组装", "行网", "测试", "打标", "包装", "铝接/校正", "压配", "静置"],
+      datasets: [
+        {
+          label: "常规系列 - 现有数量",
+          data: [2, 5, 1, 3, 1, 1, 2, 0, 3],
+          backgroundColor: "#1E90FF",
+          borderColor: "#1E90FF",
+          borderWidth: 1,
+          stack: "常规系列"
+        },
+        {
+          label: "常规系列 - 需求数量",
+          data: [3, 6, 0, 0, 4, 0, 0, 0, 18],
+          backgroundColor: "#87CEFA",
+          borderColor: "#87CEFA",
+          borderWidth: 1,
+          stack: "常规系列"
+        },
+        {
+          label: "Medic系列 - 现有数量",
+          data: [2, 4, 1, 3, 3, 1, 2, 1, 0],
+          backgroundColor: "#FF8C00",
+          borderColor: "#FF8C00",
+          borderWidth: 1,
+          stack: "Medic系列"
+        },
+        {
+          label: "Medic系列 - 需求数量",
+          data: [5, 0, 0, 0, 0, 0, 2, 0, 0],
+          backgroundColor: "#FFD700",
+          borderColor: "#FFD700",
+          borderWidth: 1,
+          stack: "Medic系列"
+        }
+      ]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: "按产品类型分组的现有与需求产线数量对比",
+          font: { size: 16 }
+        },
+        legend: { position: "top" },
+        datalabels: {
+          display: true,
+          color: "#333",
+          font: { size: 10 },
+          anchor: "end",
+          align: "top"
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: "数量 (台)" },
+          stacked: true
+        },
+        x: {
+          title: { display: true, text: "工序" },
+          stacked: true
+        }
+      }
+    }
+  });
+</script>
