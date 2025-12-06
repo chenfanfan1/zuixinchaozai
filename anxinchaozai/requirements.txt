@@ -1,5 +1,14 @@
-# python=3.11
-streamlit
-matplotlib
-numpy
-pandas
+# 核心依赖（按你代码中 import 的顺序）
+streamlit>=1.28.0
+pandas>=2.0.0
+matplotlib>=3.5.0
+xgboost>=2.0.0
+
+# 关键底层依赖（显式声明可避免兼容性问题）
+numpy>=1.21.0
+scipy>=1.7.0
+
+# 可选但推荐（提升兼容性和功能）
+python-dateutil>=2.8.0
+pytz>=2022.1
+pillow>=9.0.0        # matplotlib 渲染图像所需
